@@ -1,0 +1,7 @@
+{
+  "name": "painter-ia-ionic",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
