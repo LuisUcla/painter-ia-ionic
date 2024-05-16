@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Post } from '../../models/post.model';
-import { Posts } from '../../../assets/data/data/images';
+import { Posts } from '../../../assets/data/images';
 import { UtilsService } from '../../services/utils.service';
 import { PostDetailsComponent } from '../../shared/templates/post-details/post-details.component';
 
