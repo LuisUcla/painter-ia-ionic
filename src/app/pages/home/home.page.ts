@@ -19,9 +19,6 @@ export class HomePage implements OnInit {
   ) { }
 
   ngOnInit() {
-  }
-
-  ionViewWillEnter() {
     this.getPost();
   }
   
@@ -46,7 +43,7 @@ export class HomePage implements OnInit {
     await this.utilsService.presentModal({
       component: PostDetailsComponent,
       componentProps: { post },
-      // cssClass: 'modal-full-size'
+      cssClass: 'modal-full-size'
     })
   }
 
