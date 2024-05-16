@@ -9,8 +9,8 @@
       <strong>{{ title }} <ion-icon name="color-wand-outline"></ion-icon></strong>
     </ion-title>
 
-    <ion-buttons slot="end">  
-      <ion-button (click)="dismissModal()" *ngIf="isModal">
+    <ion-buttons slot="end" *ngIf="isModal">  
+      <ion-button (click)="dismissModal()" >
         <ion-icon class="modal-icon" name="close-circle-outline"></ion-icon>
       </ion-button>
     </ion-buttons>

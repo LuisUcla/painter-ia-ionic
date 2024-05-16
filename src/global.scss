@@ -34,3 +34,17 @@
 .click {
     cursor: pointer;
 }
+
+ion-button {
+    text-transform: capitalize;
+}
+
+.submit-btn {
+    width: 160px;
+}
+
+.d-flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
