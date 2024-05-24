@@ -34,6 +34,7 @@ export class PostDetailsComponent  implements OnInit {
   saveImage() {
     if (this.platform.is('capacitor')) {
       // compartir
+      this.utilsService.shareImageInMobile(this.selectedImage)
     } else {
       // guardar
       this.utilsService.saveImageInWeb(this.selectedImage)
