@@ -39,7 +39,7 @@
       </ion-col>
 
       <ion-col size-lg="6" size-md="6" size-sm="12" size="12">
-        <ion-item class="title-item">
+        <ion-item *ngIf="userPosts.length" class="title-item">
           <ion-label class="ion-text-wrap">
             Mis <br>
             Publicaciones

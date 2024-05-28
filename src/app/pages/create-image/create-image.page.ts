@@ -5,6 +5,7 @@ import { Post } from '../../models/post.model';
 import { Posts } from '../../../assets/data/images';
 import { UtilsService } from '../../services/utils.service';
 import { PostDetailsComponent } from '../../shared/templates/post-details/post-details.component';
+import { ImageaiService } from 'src/app/services/imageai.service';
 
 @Component({
   selector: 'app-create-image',
@@ -16,9 +17,9 @@ export class CreateImagePage implements OnInit {
   form: FormGroup;
   userPosts: Post[] = []
 
-  constructor(private builder: FormBuilder, private utilsService: UtilsService) { 
+  constructor(private builder: FormBuilder, private utilsService: UtilsService, private imageAiService: ImageaiService) { 
     this.form = this.builder.group({
-      name: ['', Validators.required],
+      name: ['Luis Fernando', Validators.required],
       prompt: ['', Validators.required]
     })
   }
@@ -26,11 +27,38 @@ export class CreateImagePage implements OnInit {
   
 
   ngOnInit() {
-    this.userPosts = Posts;
+    this.getUserPosts();
   }
 
-  submit() {
-    console.log(this.form.value)
+  getUserPosts() {
+    return this.userPosts = this.utilsService.getElementFromLocalstorage('userPosts') || [];
+  }
+
+  async submit() {
+    this.utilsService.presentLoading({ message: 'Generando Imagenes...' })
+    const prompt = this.form.value.prompt as string;
+    this.imageAiService.sendPrompt(prompt).subscribe({
+      next: (response: any) => {
+        const post: Post = {
+          prompt,
+          images: response.images,
+          name: this.form.value.name as string
+        }
+
+        this.showPostdetails(post, true); // se pasa true para que aparexca el boton 'publicar'
+        this.utilsService.dismissLoading();
+      }, error: (error) => {
+        
+        this.utilsService.dismissLoading();
+        this.utilsService.presetToast({
+          message: 'Ocurrio un error...',
+          color: 'danger',
+          duration: 2000,
+          icon: 'alert-circle-outline',
+          position: 'top'
+        })
+      }
+    });
   }
 
   randonPrompt() {
@@ -39,10 +67,10 @@ export class CreateImagePage implements OnInit {
     this.form.get('prompt').setValue(randomElement)
   }
 
-  async showPostdetails(post: Post) {
+  async showPostdetails(post: Post, isNew?: boolean) {
     await this.utilsService.presentModal({
       component: PostDetailsComponent,
-      componentProps: { post },
+      componentProps: { post, isNew },
       cssClass: 'modal-full-size'
     })
   }
