@@ -4,6 +4,7 @@ import { Clipboard } from '@capacitor/clipboard';
 import * as fs from 'file-saver'; // para guardar archivos en web
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { Share } from '@capacitor/share';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -13,12 +14,26 @@ export class UtilsService {
   constructor(
     private modalCtrl: ModalController,
     private toastCtrl: ToastController,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private router: Router
   ) { }
 
-  async presentLoading(opts?: LoadingOptions) {
+  routerLink(url: string) {
+    this.router.navigateByUrl(url);
+  }
+
+  setElementInLocalstorage(key: string, element: any) {
+    return localStorage.setItem(key, JSON.stringify(element))
+  }
+
+  getElementFromLocalstorage(key: string) {
+    return JSON.parse(localStorage.getItem(key) as string);
+  }
+
+  async presentLoading(opts?: LoadingOptions): Promise<HTMLIonLoadingElement> {
     const loading = await this.loadingCtrl.create(opts);
     await loading.present();
+    return loading;
   }
 
   async dismissLoading() {
@@ -27,10 +42,10 @@ export class UtilsService {
 
   async presentModal(modalOptions: ModalOptions) {
     const modal = await this.modalCtrl.create(modalOptions);
-    modal.present();
+    return await modal.present();
   }
 
-  async dismiss() {
+  async dismissModal() {
     return await this.modalCtrl.dismiss();
   }
 
