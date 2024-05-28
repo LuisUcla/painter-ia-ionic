@@ -3,6 +3,7 @@ import { Post } from '../../models/post.model';
 import { Posts } from '../../../assets/data/images';
 import { UtilsService } from '../../services/utils.service';
 import { PostDetailsComponent } from '../../shared/templates/post-details/post-details.component';
+import { PostsService } from 'src/app/services/posts.service';
 
 @Component({
   selector: 'app-home',
@@ -15,7 +16,8 @@ export class HomePage implements OnInit {
   loading: boolean = true;
 
   constructor(
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    private postsService: PostsService
   ) { }
 
   ngOnInit() {
@@ -33,10 +35,16 @@ export class HomePage implements OnInit {
   getPost() {
     this.loading = true;
     this.post = [];
-    setTimeout(() => {
-      this.loading = false;
-      this.post = Posts;      
-    }, 2000);
+        
+    this.postsService.getPosts().subscribe({
+      next: (response: any) => {
+        this.post = response.data
+        this.loading = false;
+      }, error: (error: any) => {
+        console.log(error)
+        this.loading = false;
+      }
+    });
   }
 
   async showPostdetails(post: Post) {
