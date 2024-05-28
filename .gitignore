@@ -55,6 +55,8 @@ yarn-error.log
 
 # Miscellaneous
 /.angular
+/server/node_modules
+/server/.env
 /.angular/cache
 .sass-cache/
 /connect.lock
