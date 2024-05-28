@@ -20,7 +20,7 @@ export class HeaderComponent  implements OnInit {
   ngOnInit() {}
 
   dismissModal() {
-    this.utilsService.dismiss();
+    this.utilsService.dismissModal();
   }
 
 }

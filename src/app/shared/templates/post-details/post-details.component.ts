@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Post } from '../../../models/post.model';
 import { Platform } from '@ionic/angular';
 import { UtilsService } from 'src/app/services/utils.service';
+import { PostsService } from 'src/app/services/posts.service';
 
 @Component({
   selector: 'app-post-details',
@@ -15,10 +16,38 @@ export class PostDetailsComponent  implements OnInit {
 
   selectedImage: string = '';
 
-  constructor(public platform: Platform, private utilsService: UtilsService) { }
+  constructor(
+    public platform: Platform, 
+    private utilsService: UtilsService,
+    private postsService: PostsService
+  ) { }
 
   ngOnInit() {
     this.selectedImage = this.post.images[0];
+  }
+
+  submit() {
+    let userPosts: Post[] = this.utilsService.getElementFromLocalstorage('userPosts') || [];
+    this.utilsService.presentLoading({ message: 'Publicando...' })
+
+    this.postsService.createPosts(this.post).subscribe({
+      next: (response: any) => {
+        userPosts.push(response.post);
+        this.utilsService.setElementInLocalstorage('userPosts', userPosts);
+        this.utilsService.routerLink('/home');
+        this.utilsService.dismissModal();
+        this.utilsService.dismissLoading();
+      }, error: () => {
+        this.utilsService.presetToast({
+          message: 'Ocurrio un error...',
+          duration: 1500,
+          color: 'danger',
+          icon: 'alert-circle-outline'
+        })
+        
+        this.utilsService.dismissLoading();
+      }
+    })
   }
 
   copyPromptToClipboard() {
