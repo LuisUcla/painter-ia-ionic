@@ -17,7 +17,7 @@
           </ion-buttons>
         </ion-item>
       
-        <form [formGroup]="form" (ngSubmit)="submit()" (keyup.enter)="submit()">
+        <form [formGroup]="form" (ngSubmit)="submit()" (keyup.enter)="submit()"><!-- (keyup.enter)="submit()": presionando enter -->
           <ion-item class="input-item">
             <ion-label position="stacked">Tu Nombre</ion-label>
             <ion-input formControlName="name" placeholder="Jhon Down"></ion-input>
@@ -30,7 +30,7 @@
           </ion-item>
       
           <div class="ion-text-center">
-            <ion-button [disabled]="form.invalid" class="submit-btn" type="submit" shape="round">
+            <ion-button [disabled]="form.invalid" class="submit-btn" type="submit" shape="round" fill="outline">
               Generar
               <ion-icon slot="end" name="images-outline"></ion-icon>
             </ion-button>

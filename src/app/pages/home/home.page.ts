@@ -34,23 +34,25 @@ export class HomePage implements OnInit {
 
   getPost() {
     this.loading = true;
-    this.post = [];
-        
-    this.postsService.getPosts().subscribe({
-      next: (response: any) => {
-        this.post = response.data
-        this.loading = false;
-      }, error: (error: any) => {
-        console.log(error)
-        this.loading = false;
-      }
-    });
+    this.post = Posts;
+    this.loading = false;
+    
+
+    // this.postsService.getPosts().subscribe({
+    //   next: (response: any) => {
+    //     this.post = response.data
+    //     this.loading = false;
+    //   }, error: (error: any) => {
+    //     console.log(error)
+    //     this.loading = false;
+    //   }
+    // });
   }
 
   async showPostdetails(post: Post) {
     await this.utilsService.presentModal({
       component: PostDetailsComponent,
-      componentProps: { post },
+      componentProps: { post, isNew: true },
       cssClass: 'modal-full-size'
     })
   }

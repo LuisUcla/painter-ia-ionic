@@ -17,9 +17,13 @@ export class CreateImagePage implements OnInit {
   form: FormGroup;
   userPosts: Post[] = []
 
-  constructor(private builder: FormBuilder, private utilsService: UtilsService, private imageAiService: ImageaiService) { 
+  constructor(
+    private builder: FormBuilder, 
+    private utilsService: UtilsService, 
+    private imageAiService: ImageaiService
+  ) { 
     this.form = this.builder.group({
-      name: ['Luis Fernando', Validators.required],
+      name: ['', Validators.required],
       prompt: ['', Validators.required]
     })
   }
@@ -31,12 +35,14 @@ export class CreateImagePage implements OnInit {
   }
 
   getUserPosts() {
-    return this.userPosts = this.utilsService.getElementFromLocalstorage('userPosts') || [];
+    this.userPosts = Posts;
+    //this.userPosts = this.utilsService.getElementFromLocalstorage('userPosts') || [];
   }
 
   async submit() {
-    this.utilsService.presentLoading({ message: 'Generando Imagenes...' })
+    const loading = await this.utilsService.presentLoading({ message: 'Generando Imagenes...' })
     const prompt = this.form.value.prompt as string;
+
     this.imageAiService.sendPrompt(prompt).subscribe({
       next: (response: any) => {
         const post: Post = {
@@ -45,11 +51,10 @@ export class CreateImagePage implements OnInit {
           name: this.form.value.name as string
         }
 
-        this.showPostdetails(post, true); // se pasa true para que aparexca el boton 'publicar'
-        this.utilsService.dismissLoading();
-      }, error: (error) => {
-        
-        this.utilsService.dismissLoading();
+        this.showPostdetails(post, false); // se pasa true para que aparexca el boton 'publicar'
+        loading.dismiss();
+      }, error: () => {
+        loading.dismiss();
         this.utilsService.presetToast({
           message: 'Ocurrio un error...',
           color: 'danger',
@@ -61,7 +66,7 @@ export class CreateImagePage implements OnInit {
     });
   }
 
-  randonPrompt() {
+  randonPrompt() { // metodo que selecciona un prompt aleatorio de la lista de prompts en los assets del proyecto
     let randonIndex = Math.floor(Math.random() * surpriseMePrompts.length);
     let randomElement = surpriseMePrompts[randonIndex];
     this.form.get('prompt').setValue(randomElement)

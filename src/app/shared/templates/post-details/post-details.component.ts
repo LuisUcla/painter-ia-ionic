@@ -26,9 +26,9 @@ export class PostDetailsComponent  implements OnInit {
     this.selectedImage = this.post.images[0];
   }
 
-  submit() {
+  async submit() {
     let userPosts: Post[] = this.utilsService.getElementFromLocalstorage('userPosts') || [];
-    this.utilsService.presentLoading({ message: 'Publicando...' })
+    const loading = await this.utilsService.presentLoading({ message: 'Publicando...' })
 
     this.postsService.createPosts(this.post).subscribe({
       next: (response: any) => {
@@ -36,7 +36,7 @@ export class PostDetailsComponent  implements OnInit {
         this.utilsService.setElementInLocalstorage('userPosts', userPosts);
         this.utilsService.routerLink('/home');
         this.utilsService.dismissModal();
-        this.utilsService.dismissLoading();
+        loading.dismiss();
       }, error: () => {
         this.utilsService.presetToast({
           message: 'Ocurrio un error...',
@@ -44,8 +44,7 @@ export class PostDetailsComponent  implements OnInit {
           color: 'danger',
           icon: 'alert-circle-outline'
         })
-        
-        this.utilsService.dismissLoading();
+        loading.dismiss();
       }
     })
   }
